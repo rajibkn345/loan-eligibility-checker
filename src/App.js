@@ -1,7 +1,7 @@
 import React from "react";
 import "./App.css";
-import LoanCalculator from "./components/loanCalculator";
-import Form from "./components/form";
+// import LoanCalculator from "./components/loanCalculator";
+// import Form from "./components/form";
 import StepForm from "./components/StepForm";
 
 function App() {
