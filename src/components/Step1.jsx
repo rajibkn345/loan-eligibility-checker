@@ -29,7 +29,7 @@ const Step1 = ({ nextStep }) => {
     onSubmit: (values, { resetForm }) => {
       console.log({ values });
       calculateLoan(values);
-      resetForm();
+      // resetForm();
       // nextStep(values); // Pass the form values to the next step
     },
   });
