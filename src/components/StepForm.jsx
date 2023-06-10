@@ -1,32 +1,3 @@
-// import React, { useState } from "react";
-// import Step1 from "./Step1";
-// import Step2 from "./Step2";
-
-// const Form = () => {
-//   const [step, setStep] = useState(1);
-//   const [formValues, setFormValues] = useState({});
-
-//   const nextStep = (values) => {
-//     setFormValues({ ...formValues, ...values }); // Combine Step 1 and Step 2 values
-//     setStep(step + 1);
-//   };
-
-//   const prevStep = () => {
-//     setStep(step - 1);
-//   };
-
-//   switch (step) {
-//     case 1:
-//       return <Step1 nextStep={nextStep} />;
-//     case 2:
-//       return <Step2 prevStep={prevStep} allvalues={formValues} />;
-//     default:
-//       return null;
-//   }
-// };
-
-// export default Form;
-
 import React, { useState } from "react";
 import Step1 from "./Step1";
 import Step2 from "./Step2";
@@ -35,9 +6,7 @@ const LoanEligibilityChecker = () => {
   const [step, setStep] = useState(1);
   const [loanDetails, setLoanDetails] = useState({});
   const [eligibility, setEligibility] = useState(false);
-  const [monthlyRepayable, setMonthlyRepayable] = useState(0);
-  const [totalInterest, setTotalInterest] = useState(0);
-  const [totalRepayable, setTotalRepayable] = useState(0);
+  const [message, setMessage] = useState({ isSuccess: false, text: "" });
 
   const nextStep = (values) => {
     setLoanDetails(values);
@@ -76,8 +45,7 @@ const LoanEligibilityChecker = () => {
     // Perform eligibility check based on loanDetails and set eligibility, monthlyRepayable, totalInterest, and totalRepayable
     // Example calculation (replace with your own logic):
     console.log({ items });
-    const { dob, isUK, eStatus, mIncome, mExpenditure, job, term, amount } =
-      items;
+    const { dob, isUK, eStatus, mIncome, mExpenditure, job } = items;
     console.log({ dob, isUK, eStatus, mIncome, mExpenditure, job });
     const ageVerification = calculateAge(dob) > 18;
     const incomeVerification =
@@ -85,14 +53,6 @@ const LoanEligibilityChecker = () => {
     const jobVerification = parseInt(job) < 2;
     console.log({ ageVerification, incomeVerification, jobVerification });
 
-    //calulate the loan output
-    const monthlyInterestRate = parseInt(term) / 100 / 12;
-    const monthlyPayment =
-      (parseInt(amount) * monthlyInterestRate) /
-      (1 - Math.pow(1 + monthlyInterestRate, -parseInt(term)));
-    const totalInterestAmount =
-      monthlyPayment * parseInt(term) - parseInt(amount);
-    const totalRepayableAmount = parseInt(amount) + totalInterestAmount;
     // setStep(step + 1);
     setEligibility(true);
     if (
@@ -102,13 +62,15 @@ const LoanEligibilityChecker = () => {
       !incomeVerification ||
       !jobVerification
     ) {
-      alert("You are not eligible for the loan");
+      setStep(step + 1);
+      setMessage({
+        isSuccess: false,
+        text: "You are not eligible for the loan",
+      });
     } else {
       setStep(step + 1);
+      setMessage({ isSuccess: true, text: "You are eligible for the loan" });
     }
-    setMonthlyRepayable(monthlyPayment);
-    setTotalInterest(totalInterestAmount);
-    setTotalRepayable(totalRepayableAmount);
   };
 
   return (
@@ -122,11 +84,14 @@ const LoanEligibilityChecker = () => {
         />
       )}
       {step === 3 && eligibility && (
-        <div>
-          <h2>Loan Details</h2>
-          <p>Monthly Repayable: {monthlyRepayable}</p>
-          <p>Total Interest Amount: {totalInterest}</p>
-          <p>Total Repayable: {totalRepayable}</p>
+        <div className="card p-3 m-3">
+          <h2
+            className={`text-center my-3 ${
+              message.isSuccess ? "text-success" : "text-danger"
+            }`}
+          >
+            {message.text}
+          </h2>
         </div>
       )}
     </div>
