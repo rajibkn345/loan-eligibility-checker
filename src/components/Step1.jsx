@@ -96,7 +96,7 @@ const Step1 = ({ nextStep }) => {
           <Button
             className=""
             type="button"
-            variant="primary"
+            variant="success"
             onClick={nextStep}
           >
             Loan eligibility checker
